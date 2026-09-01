@@ -1,11 +1,6 @@
 import streamlit as st
 import base64
-
-# Function to encode image file for CSS background
-def get_base64_of_bin_file(bin_file):
-    with open(bin_file, 'rb') as f:
-        data = f.read()
-    return base64.b64encode(data).decode()
+import os
 
 # Page Configuration
 st.set_page_config(
@@ -14,36 +9,42 @@ st.set_page_config(
     layout="wide"
 )
 
-# Apply Background
-try:
-    bin_str = get_base64_of_bin_file('Background.jpg')
-    bg_style = f"""
-    <style>
-    .stApp {{
-        background-image: url("data:image/jpeg;base64,{bin_str}");
-        background-attachment: fixed;
-        background-size: cover;
-        background-position: center;
-    }}
-    </style>
-    """
-    st.markdown(bg_style, unsafe_allow_html=True)
-except FileNotFoundError:
-    st.warning("Save 'Background.jpg' on your Desktop to display the background image.")
+# Helper function to encode local files safely
+def get_base64_of_bin_file(bin_file):
+    if os.path.exists(bin_file):
+        with open(bin_file, 'rb') as f:
+            data = f.read()
+        return base64.b64encode(data).decode()
+    return None
 
-# Custom Card & Navy/White Text Styling
+# Apply Background Styling Dynamically
+bg_base64 = get_base64_of_bin_file('Background.jpg')
+if bg_base64:
+    st.markdown(
+        f"""
+        <style>
+        .stApp {{
+            background-image: url("data:image/jpeg;base64,{bg_base64}");
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
+        }}
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+# Custom UI CSS Styling
 st.markdown("""
     <style>
-    /* Translucent White Card Overlay for Content Readability */
     .block-container {
-        background-color: rgba(255, 255, 255, 0.92);
-        padding: 2rem !important;
+        background-color: rgba(255, 255, 255, 0.94);
+        padding: 2.5rem !important;
         border-radius: 12px;
-        margin-top: 2rem;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        margin-top: 1.5rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
     }
     
-    /* Main Content Area: Navy Blue Text for Paragraphs & Labels */
     .block-container p, .block-container span, .block-container label, 
     .block-container div, .block-container h1, .block-container h2, 
     .block-container h3, .block-container h4, .block-container h5, .block-container h6 {
@@ -51,13 +52,11 @@ st.markdown("""
         font-weight: 500;
     }
 
-    /* Force Typed Input Text, Text Area Text, and Form Values to White */
     input, textarea, .stTextInput input, .stTextArea textarea, .stNumberInput input {
         color: #FFFFFF !important;
         background-color: #1E293B !important;
     }
 
-    /* Sidebar: Force ALL Text & Radio Labels to White */
     [data-testid="stSidebar"] *, 
     [data-testid="stSidebar"] label, 
     [data-testid="stSidebar"] p, 
@@ -67,11 +66,6 @@ st.markdown("""
         font-weight: 500;
     }
 
-    h1, h2, h3 {
-        font-weight: 700 !important;
-    }
-    
-    /* Custom Button Styling - Bright White Text */
     .stButton>button, div[data-testid="stFormSubmitButton"]>button {
         background-color: #112D4E !important;
         color: #FFFFFF !important;
@@ -84,19 +78,12 @@ st.markdown("""
         background-color: #3F72AF !important;
         color: #FFFFFF !important;
     }
-    
-    /* Target internal button text elements explicitly */
-    .stButton>button *, div[data-testid="stFormSubmitButton"]>button * {
-        color: #FFFFFF !important;
-    }
     </style>
 """, unsafe_allow_html=True)
 
-# Sidebar with Logo and Navigation
-try:
+# Sidebar Branding
+if os.path.exists("logo.png"):
     st.sidebar.image("logo.png", use_container_width=True)
-except Exception:
-    st.sidebar.warning("Place 'logo.png' on your Desktop to display your logo here.")
 
 st.sidebar.markdown("---")
 page = st.sidebar.radio("Navigation", ["Home & Services", "Instant Rate Calculator", "Safety Lift Checker", "Book a Transport"])
@@ -105,7 +92,6 @@ page = st.sidebar.radio("Navigation", ["Home & Services", "Instant Rate Calculat
 if page == "Home & Services":
     st.title("ASYCO LOGISTICS SOLUTIONS")
     st.subheader("Heavy Equipment Rentals & Logistics Services")
-    
     st.markdown("---")
     
     col1, col2, col3 = st.columns(3)
@@ -124,7 +110,6 @@ elif page == "Instant Rate Calculator":
     st.title("Estimated Transport Cost Calculator")
     st.write("Get a quick quote estimate for your heavy equipment and hauling requirements.")
     
-    # Equipment Database with Bed Payload, Lifting Capacity, Base Rates, and Per-KM Rates
     equipment_data = {
         "3-5t Boom Truck": {"bed_cap": 5.5, "lift_cap": 3.0, "base": 8000, "per_km": 200},
         "7t Boom Truck": {"bed_cap": 12.5, "lift_cap": 7.0, "base": 17500, "per_km": 300},
@@ -153,7 +138,6 @@ elif page == "Instant Rate Calculator":
         cargo_weight = st.number_input("Cargo Weight (Tons)", min_value=0.1, value=5.0, step=0.5)
         need_rigging = st.checkbox("Include Rigging & Loading Crew")
 
-    # Get selected equipment specs
     selected = equipment_data[vehicle_type]
     bed_cap = selected["bed_cap"]
     lift_cap = selected["lift_cap"]
@@ -163,17 +147,31 @@ elif page == "Instant Rate Calculator":
 
     st.markdown("---")
 
-    # Validation Checks
+    # FIXED: Comprehensive Capacity & Overload Checks
+    has_error = False
+    
+    # Check 1: Pure Trailers (No Boom/Lift)
     if lift_cap == 0.0 and cargo_weight > bed_cap:
-        st.error(f"⚠️ **OVERLOAD WARNING:** Cargo ({cargo_weight:.1f}T) exceeds the trailer bed capacity of **{vehicle_type}** ({bed_cap:.1f}T max).")
+        st.error(f"⚠️ **OVERLOAD WARNING:** Cargo ({cargo_weight:.1f}T) exceeds the maximum bed capacity of **{vehicle_type}** ({bed_cap:.1f}T max).")
+        has_error = True
+    
+    # Check 2: Pure Mobile Cranes (No Cargo Bed)
     elif bed_cap == 0.0 and cargo_weight > lift_cap:
         st.error(f"⚠️ **OVERLOAD WARNING:** Cargo ({cargo_weight:.1f}T) exceeds the maximum rated lifting capacity of **{vehicle_type}** ({lift_cap:.1f}T max).")
-    elif bed_cap > 0.0 and lift_cap > 0.0 and cargo_weight > bed_cap:
-        st.error(f"⚠️ **BED OVERLOAD WARNING:** Cargo ({cargo_weight:.1f}T) exceeds the deck/bed transport limit of **{vehicle_type}** ({bed_cap:.1f}T bed max), even though its boom can lift up to {lift_cap:.1f}T.")
-    else:
-        total_estimate = base_rate + (distance_km * per_km_rate) + rigging_fee
+        has_error = True
         
-        st.success("✅ **SAFE PARAMETERS:** Operation is within equipment capacity limits.")
+    # Check 3: Boom Trucks (Bed + Boom Dynamic Validation)
+    elif bed_cap > 0.0 and lift_cap > 0.0:
+        if cargo_weight > bed_cap:
+            st.error(f"⚠️ **BED OVERLOAD:** Cargo ({cargo_weight:.1f}T) exceeds the bed transport limit of **{vehicle_type}** ({bed_cap:.1f}T max).")
+            has_error = True
+        elif cargo_weight > lift_cap:
+            st.warning(f"⚠️ **SELF-LOADING LIMIT EXCEEDED:** Cargo ({cargo_weight:.1f}T) fits on the truck bed ({bed_cap:.1f}T max), but exceeds the boom's direct lifting limit ({lift_cap:.1f}T max). An auxiliary mobile crane will be required for loading/unloading.")
+
+    # Calculate and display rate if no fatal errors exist
+    if not has_error:
+        total_estimate = base_rate + (distance_km * per_km_rate) + rigging_fee
+        st.success("✅ **SAFE PARAMETERS:** Equipment choice complies with hauling weight limits.")
         st.markdown(f"### **Estimated Total Cost: `PHP {total_estimate:,.2f}`**")
         st.write(f"**Selected Equipment:** {vehicle_type}")
         if bed_cap > 0:
@@ -185,21 +183,18 @@ elif page == "Instant Rate Calculator":
         if need_rigging:
             st.write(f"**Rigging Crew & Spotter Fee:** PHP {rigging_fee:,.2f}")
             
-        st.caption("*Final quotation subject to site survey, load radius, highway permits, and rigging plan.")
+        st.caption("*Final quotation subject to site survey, working radius, highway permits, and rigging plan.")
 
 # --- PAGE 3: SAFETY LIFT CHECKER ---
 elif page == "Safety Lift Checker":
     st.title("Boom Truck & Crane Capacity Safety Check")
     st.write("Evaluate lifting capacity utilization and dynamic safety margins based on radius distance prior to site deployment.")
     
-    # Custom Crane Safety Function with Radius Consideration
     def check_crane_safety_factor(crane_capacity, total_load, dynamic_factor=1.15):
-        """Calculates the factor of safety for a crane lift."""
         effective_load = total_load * dynamic_factor
         if effective_load == 0:
             return 0
-        safety_factor = crane_capacity / effective_load
-        return safety_factor
+        return crane_capacity / effective_load
 
     col1, col2 = st.columns(2)
     with col1:
@@ -212,32 +207,37 @@ elif page == "Safety Lift Checker":
         crane_capacity = st.number_input(f"Rated Capacity at {radius_m}m Radius (Tons/KG)", min_value=0.1, value=25.0, step=0.5)
         dynamic_factor = st.slider("Dynamic Factor (Motion/Wind Multiplier)", min_value=1.10, max_value=1.25, value=1.15, step=0.01)
 
-    # Calculate FoS using your function
-    fos = check_crane_safety_factor(crane_capacity, total_gross_load, dynamic_factor)
-    effective_load = total_gross_load * dynamic_factor
-    utilization = (effective_load / crane_capacity) * 100 if crane_capacity > 0 else 0
-
     st.markdown("---")
-    st.markdown(f"### **Computed Factor of Safety: `{fos:.2f}`**")
-    st.write(f"**Operating Radius:** {radius_m:.1f} Meters")
-    st.write(f"**Gross Load (Payload + Rigging):** {total_gross_load:.2f}")
-    st.write(f"**Dynamic Effective Load ({dynamic_factor}x):** {effective_load:.2f}")
-    st.write(f"**Capacity Utilization:** {utilization:.1f}%")
+    
+    # FIXED: Forced Load Chart Verification Checkbox
+    chart_verified = st.checkbox("I confirm that the entered rated capacity is verified directly from the official manufacturer OEM load chart for this radius and outrigger setup.")
+    
+    if chart_verified:
+        fos = check_crane_safety_factor(crane_capacity, total_gross_load, dynamic_factor)
+        effective_load = total_gross_load * dynamic_factor
+        utilization = (effective_load / crane_capacity) * 100 if crane_capacity > 0 else 0
 
-    if fos >= 1.0:
-        st.success(f"SAFE OPERATION: Lift at {radius_m}m radius is within safe parameters.")
+        st.markdown(f"### **Computed Factor of Safety: `{fos:.2f}`**")
+        st.write(f"**Operating Radius:** {radius_m:.1f} Meters")
+        st.write(f"**Gross Load (Payload + Rigging):** {total_gross_load:.2f}")
+        st.write(f"**Dynamic Effective Load ({dynamic_factor}x):** {effective_load:.2f}")
+        st.write(f"**Capacity Utilization:** {utilization:.1f}%")
+
+        if fos >= 1.0:
+            st.success(f"SAFE OPERATION: Lift at {radius_m}m radius is within safe parameters.")
+        else:
+            st.error(f"WARNING: Unsafe condition! Dynamic effective load exceeds crane rated capacity at {radius_m}m radius.")
     else:
-        st.error(f"WARNING: Unsafe condition! Dynamic effective load exceeds crane rated capacity at {radius_m}m radius.")
+        st.info("💡 Please verify and check the box above to generate the safety factor calculation.")
 
 # --- PAGE 4: BOOK A TRANSPORT ---
 elif page == "Book a Transport":
     st.title("Request a Transport Quote")
     st.write("Fill out the details below and our dispatch team will receive your request directly via email.")
 
-    # HTML Form configured with FormSubmit API
+    # FIXED: Re-enabled FormSubmit captcha to prevent email spam bots
     contact_form_html = """
     <form action="https://formsubmit.co/asycologisticssolutions@gmail.com" method="POST" style="background-color: #1E293B; padding: 20px; border-radius: 10px;">
-        <input type="hidden" name="_captcha" value="false">
         <input type="hidden" name="_subject" value="New ASYCO Transport Quote Request">
         
         <div style="display: flex; gap: 15px; margin-bottom: 15px;">
@@ -284,4 +284,4 @@ elif page == "Book a Transport":
     </form>
     """
     
-    st.components.v1.html(contact_form_html, height=520)
+    st.components.v1.html(contact_form_html, height=560)
