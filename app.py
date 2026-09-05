@@ -78,6 +78,18 @@ st.markdown("""
         background-color: #3F72AF !important;
         color: #FFFFFF !important;
     }
+
+    /* Force Native Streamlit Columns to Stack Vertically on Mobile */
+    @media (max-width: 768px) {
+        [data-testid="column"] {
+            width: 100% !important;
+            flex: 1 1 100% !important;
+            min-width: 100% !important;
+        }
+        .block-container {
+            padding: 1rem !important;
+        }
+    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -147,20 +159,16 @@ elif page == "Instant Rate Calculator":
 
     st.markdown("---")
 
-    # FIXED: Comprehensive Capacity & Overload Checks
     has_error = False
     
-    # Check 1: Pure Trailers (No Boom/Lift)
     if lift_cap == 0.0 and cargo_weight > bed_cap:
         st.error(f"⚠️ **OVERLOAD WARNING:** Cargo ({cargo_weight:.1f}T) exceeds the maximum bed capacity of **{vehicle_type}** ({bed_cap:.1f}T max).")
         has_error = True
     
-    # Check 2: Pure Mobile Cranes (No Cargo Bed)
     elif bed_cap == 0.0 and cargo_weight > lift_cap:
         st.error(f"⚠️ **OVERLOAD WARNING:** Cargo ({cargo_weight:.1f}T) exceeds the maximum rated lifting capacity of **{vehicle_type}** ({lift_cap:.1f}T max).")
         has_error = True
         
-    # Check 3: Boom Trucks (Bed + Boom Dynamic Validation)
     elif bed_cap > 0.0 and lift_cap > 0.0:
         if cargo_weight > bed_cap:
             st.error(f"⚠️ **BED OVERLOAD:** Cargo ({cargo_weight:.1f}T) exceeds the bed transport limit of **{vehicle_type}** ({bed_cap:.1f}T max).")
@@ -168,7 +176,6 @@ elif page == "Instant Rate Calculator":
         elif cargo_weight > lift_cap:
             st.warning(f"⚠️ **SELF-LOADING LIMIT EXCEEDED:** Cargo ({cargo_weight:.1f}T) fits on the truck bed ({bed_cap:.1f}T max), but exceeds the boom's direct lifting limit ({lift_cap:.1f}T max). An auxiliary mobile crane will be required for loading/unloading.")
 
-    # Calculate and display rate if no fatal errors exist
     if not has_error:
         total_estimate = base_rate + (distance_km * per_km_rate) + rigging_fee
         st.success("✅ **SAFE PARAMETERS:** Equipment choice complies with hauling weight limits.")
@@ -209,7 +216,6 @@ elif page == "Safety Lift Checker":
 
     st.markdown("---")
     
-    # FIXED: Forced Load Chart Verification Checkbox
     chart_verified = st.checkbox("I confirm that the entered rated capacity is verified directly from the official manufacturer OEM load chart for this radius and outrigger setup.")
     
     if chart_verified:
@@ -235,53 +241,110 @@ elif page == "Book a Transport":
     st.title("Request a Transport Quote")
     st.write("Fill out the details below and our dispatch team will receive your request directly via email.")
 
-    # FIXED: Re-enabled FormSubmit captcha to prevent email spam bots
     contact_form_html = """
-    <form action="https://formsubmit.co/asycologisticssolutions@gmail.com" method="POST" style="background-color: #1E293B; padding: 20px; border-radius: 10px;">
-        <input type="hidden" name="_subject" value="New ASYCO Transport Quote Request">
-        
-        <div style="display: flex; gap: 15px; margin-bottom: 15px;">
-            <div style="flex: 1;">
-                <label style="color: white; font-size: 14px;">Contact Person / Company Name</label><br>
-                <input type="text" name="name" required style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; background: #0F172A; color: white;">
-            </div>
-            <div style="flex: 1;">
-                <label style="color: white; font-size: 14px;">Email Address</label><br>
-                <input type="email" name="email" required style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; background: #0F172A; color: white;">
-            </div>
-        </div>
+    <style>
+        .form-container {
+            background-color: #1E293B;
+            padding: 20px;
+            border-radius: 10px;
+            box-sizing: border-box;
+            width: 100%;
+        }
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        .form-group {
+            flex: 1;
+            min-width: 250px;
+        }
+        label {
+            color: white;
+            font-size: 14px;
+            display: inline-block;
+            margin-bottom: 5px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #334155;
+            background: #0F172A;
+            color: white;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        button {
+            background-color: #112D4E;
+            color: white;
+            font-weight: bold;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #3F72AF;
+        }
+        @media (max-width: 600px) {
+            .form-group {
+                flex: 1 1 100%;
+            }
+            .form-container {
+                padding: 15px;
+            }
+        }
+    </style>
 
-        <div style="display: flex; gap: 15px; margin-bottom: 15px;">
-            <div style="flex: 1;">
-                <label style="color: white; font-size: 14px;">Phone / Contact Number</label><br>
-                <input type="text" name="phone" required style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; background: #0F172A; color: white;">
+    <div class="form-container">
+        <form action="https://formsubmit.co/asycologisticssolutions@gmail.com" method="POST">
+            <input type="hidden" name="_subject" value="New ASYCO Transport Quote Request">
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Contact Person / Company Name</label>
+                    <input type="text" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" name="email" required>
+                </div>
             </div>
-            <div style="flex: 1;">
-                <label style="color: white; font-size: 14px;">Target Date of Transport</label><br>
-                <input type="date" name="date" required style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; background: #0F172A; color: white;">
-            </div>
-        </div>
 
-        <div style="display: flex; gap: 15px; margin-bottom: 15px;">
-            <div style="flex: 1;">
-                <label style="color: white; font-size: 14px;">Pickup Location</label><br>
-                <input type="text" name="pickup" required style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; background: #0F172A; color: white;">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Phone / Contact Number</label>
+                    <input type="text" name="phone" required>
+                </div>
+                <div class="form-group">
+                    <label>Target Date of Transport</label>
+                    <input type="date" name="date" required>
+                </div>
             </div>
-            <div style="flex: 1;">
-                <label style="color: white; font-size: 14px;">Destination / Dropoff Location</label><br>
-                <input type="text" name="dropoff" required style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; background: #0F172A; color: white;">
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Pickup Location</label>
+                    <input type="text" name="pickup" required>
+                </div>
+                <div class="form-group">
+                    <label>Destination / Dropoff Location</label>
+                    <input type="text" name="dropoff" required>
+                </div>
             </div>
-        </div>
 
-        <div style="margin-bottom: 15px;">
-            <label style="color: white; font-size: 14px;">Cargo Description & Dimensions</label><br>
-            <textarea name="cargo" rows="4" required style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; background: #0F172A; color: white;"></textarea>
-        </div>
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label>Cargo Description & Dimensions</label>
+                <textarea name="cargo" rows="4" required></textarea>
+            </div>
 
-        <button type="submit" style="background-color: #112D4E; color: white; font-weight: bold; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; width: 100%;">
-            Submit Request
-        </button>
-    </form>
+            <button type="submit">Submit Request</button>
+        </form>
+    </div>
     """
     
-    st.components.v1.html(contact_form_html, height=560)
+    st.components.v1.html(contact_form_html, height=720, scrolling=True)
