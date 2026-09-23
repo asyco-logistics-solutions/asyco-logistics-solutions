@@ -133,45 +133,70 @@ elif page == "Company Profile":
 
     st.markdown("### About Our Company")
     st.write(
-        "Founded by Melchor De Guzman Jr. since 2023, ASYCO Logistics Solutions provides heavy equipment rental, "
-        "specialized hauling, and drayage logistics across the Philippines. We specialize in safe, efficient, "
-        "and reliable transportation solutions for infrastructure, construction, commercial, and industrial operations."
+        "Founded by Melchor De Guzman Jr. in 2023, ASYCO Logistics Solutions has established itself as a dynamic "
+        "and premier provider of heavy equipment rentals, specialized heavy hauling, and drayage logistics services in the Philippines. "
+        "With operational expertise rooted in engineering precision, rig safety, and reliable site execution, ASYCO provides seamless "
+        "end-to-end transport solutions tailored to infrastructure, commercial construction, energy, and industrial projects."
     )
 
+    st.markdown("---")
     col1, col2 = st.columns(2)
     with col1:
         st.markdown("### 🎯 Our Mission")
         st.write(
-            "To deliver reliable heavy transport, rigging, and equipment rental services through rigorous safety protocols, "
-            "engineered lift planning, and exceptional customer service."
+            "Our mission is to deliver dependable, engineered, and uncompromisingly safe heavy haulage and lifting solutions "
+            "that drive national infrastructure development. We are committed to maintaining the highest standards of operational "
+            "safety through certified equipment maintenance, rigorous lift planning, dynamic capacity checks, and continuous professional "
+            "training for our rigging crews and operators. By combining advanced fleet capabilities with responsive client management, "
+            "we strive to optimize project timelines and protect every client's high-value assets."
         )
 
     with col2:
         st.markdown("### 👁️ Our Vision")
         st.write(
-            "To be a trusted logistics and heavy equipment partner, supporting infrastructure "
-            "and industrial development across Luzon, Visayas, and Mindanao."
+            "Our vision is to become the Philippines' most trusted and benchmark-setting heavy equipment rental and logistics "
+            "partner across Luzon, Visayas, and Mindanao. We aim to lead the industry by integrating technical innovation, modern fleet "
+            "management, and field-tested safety standards into every site operation—empowering national progress, renewable energy, "
+            "and commercial development while building enduring, value-driven partnerships with engineering and construction leaders."
         )
 
     st.markdown("---")
-    st.markdown("### 🚚 Capabilities & Fleet")
+    st.markdown("### 🚚 Comprehensive Fleet & Equipment Catalog")
+    st.write("Below is our complete line of specialized machinery, lifting equipment, and heavy transport trailers available for short-term rental and long-term deployment:")
 
-    cap_col1, cap_col2 = st.columns(2)
-    with cap_col1:
+    eq_col1, eq_col2 = st.columns(2)
+
+    with eq_col1:
+        st.markdown("#### 🏗️ Boom Trucks & Mobile Cranes")
         st.markdown("""
-        * **Boom Trucks:** 3T to 16T capacities
-        * **Mobile Cranes:** 25T up to 300T+ RT & Truck Cranes
-        * **Heavy Trailers:** Lowbed, Lowboy, Flatbed, and Challenger Trailers
+        * **3-5t Boom Truck** — Bed Capacity: *5.5T* | Direct Lift Limit: *3.0T*
+        * **7t Boom Truck** — Bed Capacity: *12.5T* | Direct Lift Limit: *7.0T*
+        * **10t Boom Truck** — Bed Capacity: *15.0T* | Direct Lift Limit: *10.0T*
+        * **16t Boom Truck** — Bed Capacity: *20.0T* | Direct Lift Limit: *16.0T*
+        * **25t Mobile Crane** — Rated Lifting Capacity: *25.0T*
+        * **50t Mobile Crane** — Rated Lifting Capacity: *50.0T*
+        * **80t Mobile Crane** — Rated Lifting Capacity: *80.0T*
+        * **100t Mobile Crane** — Rated Lifting Capacity: *100.0T*
+        * **110t Mobile Crane** — Rated Lifting Capacity: *110.0T*
+        * **150t Mobile Crane** — Rated Lifting Capacity: *150.0T*
+        * **200t Mobile Crane** — Rated Lifting Capacity: *200.0T*
+        * **300t Mobile Crane** — Rated Lifting Capacity: *300.0T*
         """)
-    with cap_col2:
+
+    with eq_col2:
+        st.markdown("#### 🚛 Trailers & Material Handling")
         st.markdown("""
-        * **Drayage Logistics:** Container transport from MICT and South Harbor
-        * **Warehouse Equipment:** Electric Walkie Stackers & Reach Trucks
-        * **Engineering:** Site surveys, load chart analyses, and safety factor calculations
+        * **Flatbed Trailer (40ft)** — Bed Payload Capacity: *32.0T*
+        * **Lowbed Trailer** — Bed Payload Capacity: *40.0T*
+        * **Lowboy Trailer** — Bed Payload Capacity: *55.0T*
+        * **Challenger Trailer** — Bed Payload Capacity: *100.0T*
+        * **Container Drayage Support** — Direct MICT / ATI South Harbor Hauling
+        * **Warehouse Operations** — Electric Walkie Stackers & Reach Trucks
+        * **Specialized Rigging Crew** — Experienced Spotters, Riggers & Signalmen
         """)
 
     st.markdown("---")
-    st.markdown("### 📍 Business Location & Contact")
+    st.markdown("### 📍 Business Location & Contact Information")
     st.write("**Founder / Owner:** Melchor De Guzman Jr.")
     st.write("**Office Address:** Queens Row West, Molino 3, Bacoor City, Cavite, Philippines")
     st.write("**Email:** asycologisticssolutions@gmail.com")
