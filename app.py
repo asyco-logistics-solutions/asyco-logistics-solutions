@@ -98,7 +98,13 @@ if os.path.exists("logo.png"):
     st.sidebar.image("logo.png", use_container_width=True)
 
 st.sidebar.markdown("---")
-page = st.sidebar.radio("Navigation", ["Home & Services", "Instant Rate Calculator", "Safety Lift Checker", "Book a Transport"])
+page = st.sidebar.radio("Navigation", [
+    "Home & Services", 
+    "Company Profile", 
+    "Instant Rate Calculator", 
+    "Safety Lift Checker", 
+    "Book a Transport"
+])
 
 # --- PAGE 1: HOME & SERVICES ---
 if page == "Home & Services":
@@ -117,7 +123,59 @@ if page == "Home & Services":
         st.markdown("### Warehouse & Transfer")
         st.write("Cross-docking, stacker/reach truck deployment, and site-to-site machinery transfer.")
 
-# --- PAGE 2: INSTANT RATE CALCULATOR ---
+# --- PAGE 2: COMPANY PROFILE ---
+elif page == "Company Profile":
+    st.title("Company Profile")
+    st.subheader("ASYCO LOGISTICS SOLUTIONS")
+    st.caption("Heavy Equipment Rentals & Logistics Services")
+    st.markdown("---")
+
+    st.markdown("### About Our Company")
+    st.write(
+        "ASYCO Logistics Solutions provides heavy equipment rental, specialized hauling, "
+        "and drayage logistics across the Philippines. We specialize in safe, efficient, and reliable "
+        "transportation solutions for infrastructure, construction, commercial, and industrial operations."
+    )
+
+    col1, col2 = st.columns(2)
+    with col1:
+        st.markdown("### 🎯 Our Mission")
+        st.write(
+            "To deliver reliable heavy transport, rigging, and equipment rental services through rigorous safety protocols, "
+            "engineered lift planning, and exceptional customer service."
+        )
+
+    with col2:
+        st.markdown("### 👁️ Our Vision")
+        st.write(
+            "To be a trusted logistics and heavy equipment partner, supporting infrastructure "
+            "and industrial development across Luzon, Visayas, and Mindanao."
+        )
+
+    st.markdown("---")
+    st.markdown("### 🚚 Capabilities & Fleet")
+
+    cap_col1, cap_col2 = st.columns(2)
+    with cap_col1:
+        st.markdown("""
+        * **Boom Trucks:** 3T to 16T capacities
+        * **Mobile Cranes:** 25T up to 300T+ RT & Truck Cranes
+        * **Heavy Trailers:** Lowbed, Lowboy, Flatbed, and Challenger Trailers
+        """)
+    with cap_col2:
+        st.markdown("""
+        * **Drayage Logistics:** Container transport from MICT and South Harbor
+        * **Warehouse Equipment:** Electric Walkie Stackers & Reach Trucks
+        * **Engineering:** Site surveys, load chart analyses, and safety factor calculations
+        """)
+
+    st.markdown("---")
+    st.markdown("### 📍 Business Location & Contact")
+    st.write("**Office Address:** Queens Row West, Molino 3, Bacoor City, Cavite, Philippines")
+    st.write("**Email:** asycologisticssolutions@gmail.com")
+    st.write("**Service Coverage:** Luzon, Visayas, and Mindanao")
+
+# --- PAGE 3: INSTANT RATE CALCULATOR ---
 elif page == "Instant Rate Calculator":
     st.title("Estimated Transport Cost Calculator")
     st.write("Get a quick quote estimate for your heavy equipment and hauling requirements.")
@@ -192,7 +250,7 @@ elif page == "Instant Rate Calculator":
             
         st.caption("*Final quotation subject to site survey, working radius, highway permits, and rigging plan.")
 
-# --- PAGE 3: SAFETY LIFT CHECKER ---
+# --- PAGE 4: SAFETY LIFT CHECKER ---
 elif page == "Safety Lift Checker":
     st.title("Boom Truck & Crane Capacity Safety Check")
     st.write("Evaluate lifting capacity utilization and dynamic safety margins based on radius distance prior to site deployment.")
@@ -236,7 +294,7 @@ elif page == "Safety Lift Checker":
     else:
         st.info("💡 Please verify and check the box above to generate the safety factor calculation.")
 
-# --- PAGE 4: BOOK A TRANSPORT ---
+# --- PAGE 5: BOOK A TRANSPORT ---
 elif page == "Book a Transport":
     st.title("Request a Transport Quote")
     st.write("Fill out the details below and our dispatch team will receive your request directly via email.")
