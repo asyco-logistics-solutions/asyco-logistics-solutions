@@ -1,6 +1,13 @@
 import base64
+import io
 import os
 import streamlit as st
+
+# ReportLab imports for generating PDF on-the-fly
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
+from reportlab.platypus import HRFlowable, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 
 # Page Configuration
 st.set_page_config(
@@ -15,6 +22,215 @@ def get_base64_of_bin_file(bin_file):
       data = f.read()
     return base64.b64encode(data).decode()
   return None
+
+
+# Helper function to generate Company Profile PDF buffer
+def generate_company_profile_pdf():
+  buffer = io.BytesIO()
+  doc = SimpleDocTemplate(
+      buffer,
+      pagesize=letter,
+      rightMargin=36,
+      leftMargin=36,
+      topMargin=36,
+      bottomMargin=36,
+  )
+  story = []
+
+  styles = getSampleStyleSheet()
+
+  # Custom Styles
+  title_style = ParagraphStyle(
+      "DocTitle",
+      parent=styles["Heading1"],
+      fontName="Helvetica-Bold",
+      fontSize=22,
+      textColor=colors.HexColor("#112D4E"),
+      spaceAfter=4,
+  )
+  subtitle_style = ParagraphStyle(
+      "DocSubtitle",
+      parent=styles["Normal"],
+      fontName="Helvetica-Bold",
+      fontSize=12,
+      textColor=colors.HexColor("#3F72AF"),
+      spaceAfter=12,
+  )
+  heading_style = ParagraphStyle(
+      "SectionHeading",
+      parent=styles["Heading2"],
+      fontName="Helvetica-Bold",
+      fontSize=14,
+      textColor=colors.HexColor("#112D4E"),
+      spaceBefore=10,
+      spaceAfter=6,
+  )
+  body_style = ParagraphStyle(
+      "BodyTextCustom",
+      parent=styles["Normal"],
+      fontName="Helvetica",
+      fontSize=10,
+      textColor=colors.HexColor("#1E293B"),
+      leading=14,
+      spaceAfter=8,
+  )
+
+  # Header
+  story.append(Paragraph("ASYCO LOGISTICS SOLUTIONS", title_style))
+  story.append(
+      Paragraph(
+          "Heavy Equipment Rentals & Logistics Services | Established 2023",
+          subtitle_style,
+      )
+  )
+  story.append(
+      HRFlowable(
+          width="100%",
+          thickness=1.5,
+          color=colors.HexColor("#112D4E"),
+          spaceAfter=12,
+      )
+  )
+
+  # About Us
+  story.append(Paragraph("About Our Company", heading_style))
+  story.append(
+      Paragraph(
+          "Established in 2023, ASYCO Logistics Solutions has positioned"
+          " itself as a premier and trusted partner for heavy equipment"
+          " rentals, specialized heavy hauling, and container drayage logistics"
+          " services across the Philippines. Grounded in engineering precision,"
+          " rig safety, and reliable site execution, ASYCO delivers seamless"
+          " end-to-end transport solutions tailored to infrastructure"
+          " development, commercial construction, energy projects, and"
+          " industrial operations.",
+          body_style,
+      )
+  )
+
+  # Mission & Vision
+  story.append(Paragraph("Our Mission & Vision", heading_style))
+  story.append(
+      Paragraph(
+          "<b>Our Mission:</b> To deliver dependable, engineered, and"
+          " uncompromisingly safe heavy haulage and lifting solutions that"
+          " drive national infrastructure development through certified"
+          " equipment maintenance, rigorous lift planning, dynamic capacity"
+          " checks, and continuous professional training.",
+          body_style,
+      )
+  )
+  story.append(
+      Paragraph(
+          "<b>Our Vision:</b> To become the Philippines' most trusted and"
+          " benchmark-setting heavy equipment rental and logistics partner"
+          " across Luzon, Visayas, and Mindanao by integrating technical"
+          " innovation, modern fleet management, and field-tested safety"
+          " protocols.",
+          body_style,
+      )
+  )
+
+  story.append(Spacer(1, 8))
+
+  # Equipment Table Header
+  story.append(
+      Paragraph("Comprehensive Equipment & Fleet Capabilities", heading_style)
+  )
+
+  equipment_data = [
+      [
+          Paragraph("<b>Equipment Type</b>", body_style),
+          Paragraph("<b>Specifications & Capacity</b>", body_style),
+      ],
+      [
+          Paragraph("3-5t Boom Truck", body_style),
+          Paragraph(
+              "Bed Capacity: 5.5T | Direct Lift Limit: 3.0T", body_style
+          ),
+      ],
+      [
+          Paragraph("7t Boom Truck", body_style),
+          Paragraph(
+              "Bed Capacity: 12.5T | Direct Lift Limit: 7.0T", body_style
+          ),
+      ],
+      [
+          Paragraph("10t Boom Truck", body_style),
+          Paragraph(
+              "Bed Capacity: 15.0T | Direct Lift Limit: 10.0T", body_style
+          ),
+      ],
+      [
+          Paragraph("16t Boom Truck", body_style),
+          Paragraph(
+              "Bed Capacity: 20.0T | Direct Lift Limit: 16.0T", body_style
+          ),
+      ],
+      [
+          Paragraph("Mobile Cranes (25T to 300T)", body_style),
+          Paragraph(
+              "25t, 50t, 80t, 100t, 110t, 150t, 200t, 300t Mobile Cranes",
+              body_style,
+          ),
+      ],
+      [
+          Paragraph("Trailers & Heavy Hauling", body_style),
+          Paragraph(
+              "40ft Flatbed (32T), Lowbed (40T), Lowboy (55T), Challenger"
+              " (100T)",
+              body_style,
+          ),
+      ],
+      [
+          Paragraph("Container Drayage & Warehouse", body_style),
+          Paragraph(
+              "MICT/ATI South Harbor Hauling, Electric Walkie Stackers & Reach"
+              " Trucks",
+              body_style,
+          ),
+      ],
+  ]
+
+  table = Table(equipment_data, colWidths=[180, 340])
+  table.setStyle(
+      TableStyle([
+          ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#F1F5F9")),
+          ("TEXTCOLOR", (0, 0), (-1, 0), colors.HexColor("#112D4E")),
+          ("ALIGN", (0, 0), (-1, -1), "LEFT"),
+          ("VALIGN", (0, 0), (-1, -1), "TOP"),
+          ("GRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#CBD5E1")),
+          ("BOTTOMPADDING", (0, 0), (-1, -1), 5),
+          ("TOPPADDING", (0, 0), (-1, -1), 5),
+      ])
+  )
+
+  story.append(table)
+  story.append(Spacer(1, 10))
+
+  # Contact Info
+  story.append(Paragraph("Contact Information", heading_style))
+  story.append(
+      Paragraph(
+          "<b>Office Address:</b> Queens Row West, Molino 3, Bacoor City,"
+          " Cavite, Philippines",
+          body_style,
+      )
+  )
+  story.append(
+      Paragraph(
+          "<b>Email:</b> asycologisticssolutions@gmail.com", body_style
+      )
+  )
+  story.append(
+      Paragraph(
+          "<b>Service Coverage:</b> Luzon, Visayas, and Mindanao", body_style
+      )
+  )
+
+  doc.build(story)
+  buffer.seek(0)
+  return buffer.getvalue()
 
 
 # Apply Background Styling Dynamically
@@ -67,7 +283,7 @@ st.markdown(
         font-weight: 500;
     }
 
-    .stButton>button, div[data-testid="stFormSubmitButton"]>button {
+    .stButton>button, div[data-testid="stFormSubmitButton"]>button, .stDownloadButton>button {
         background-color: #112D4E !important;
         color: #FFFFFF !important;
         border-radius: 6px;
@@ -75,12 +291,11 @@ st.markdown(
         font-weight: bold;
         width: 100%;
     }
-    .stButton>button:hover, div[data-testid="stFormSubmitButton"]>button:hover {
+    .stButton>button:hover, div[data-testid="stFormSubmitButton"]>button:hover, .stDownloadButton>button:hover {
         background-color: #3F72AF !important;
         color: #FFFFFF !important;
     }
 
-    /* Force Native Streamlit Columns to Stack Vertically on Mobile */
     @media (max-width: 768px) {
         [data-testid="column"] {
             width: 100% !important;
@@ -140,62 +355,74 @@ if page == "Home & Services":
 
 # --- PAGE 2: COMPANY PROFILE ---
 elif page == "Company Profile":
-  st.title("Company Profile")
-  st.subheader("ASYCO LOGISTICS SOLUTIONS")
-  st.caption("Heavy Equipment Rentals & Logistics Services")
-  st.markdown("**Established in 2023**")
+  header_col1, header_col2 = st.columns([3, 1])
+
+  with header_col1:
+    st.title("Company Profile")
+    st.subheader("ASYCO LOGISTICS SOLUTIONS")
+    st.caption("Heavy Equipment Rentals & Logistics Services")
+    st.markdown("**Established in 2023**")
+
+  with header_col2:
+    st.write(" ")
+    st.write(" ")
+    # Downloadable PDF Button
+    pdf_bytes = generate_company_profile_pdf()
+    st.download_button(
+        label="📥 Download Profile (PDF)",
+        data=pdf_bytes,
+        file_name="ASYCO_Logistics_Solutions_Company_Profile.pdf",
+        mime="application/pdf",
+    )
+
   st.markdown("---")
 
-  st.markdown("### Tungkol sa Aming Kompanya")
+  st.markdown("### About Our Company")
   st.write(
-      "Itinatag noong 2023, ang ASYCO Logistics Solutions ay isang mabilis na"
-      " umuunlad at pinagkakatiwalaang kompanya sa Pilipinas na nagbibigay ng"
-      " heavy equipment rentals, specialized heavy hauling, at drayage"
-      " logistics services. Sa pamamagitan ng aming expertise sa engineering"
-      " precision, rig safety, at maaasahang site execution, naghahatid ang"
-      " ASYCO ng kumpleto at laging ligtas na transport solutions para sa mga"
-      " proyektong pang-inprastraktura, komersyal na konstruksyon, enerhiya, at"
-      " industriyal."
+      "Established in 2023, ASYCO Logistics Solutions has positioned itself"
+      " as a premier and trusted partner for heavy equipment rentals,"
+      " specialized heavy hauling, and container drayage logistics services across"
+      " the Philippines. Grounded in engineering precision, rig safety, and"
+      " reliable site execution, ASYCO delivers seamless end-to-end transport"
+      " solutions tailored to infrastructure development, commercial construction,"
+      " energy projects, and industrial operations."
   )
 
   st.markdown("---")
   col1, col2 = st.columns(2)
   with col1:
-    st.markdown("### 🎯 Aming Layunin (Mission)")
+    st.markdown("### 🎯 Our Mission")
     st.write(
-        "Ang aming layunin ay magbigay ng maasahan, engineered, at walang"
-        " kompromisong ligtas na heavy haulage at lifting solutions na"
-        " nagtataguyod sa pag-unlad ng pambansang inprastraktura. Nakatuon kami"
-        " sa pagpapanatili ng pinakamataas na pamantayan ng operational safety"
-        " sa pamamagitan ng regular na sertipikadong maintenance ng aming mga"
-        " kagamitan, maingat na lift planning, dynamic capacity checks, at"
-        " tuluy-tuloy na propesyonal na pagsasanay ng aming mga rigger at crane"
-        " operators. Sa pagsasama ng makabagong fleet at mabilis na pagtugon sa"
-        " pangangailangan ng kliyente, sinisiguro naming natutupad ang bawat"
-        " proyekto sa takdang oras at napoprotektahan ang mga mahahalagang"
-        " kagamitan ng aming mga kasosyo."
+        "Our mission is to deliver dependable, engineered, and uncompromisingly"
+        " safe heavy haulage and lifting solutions that drive national"
+        " infrastructure development. We are committed to upholding the highest"
+        " standards of operational safety through certified equipment maintenance,"
+        " rigorous lift planning, dynamic capacity checks, and continuous"
+        " professional training for our rigging crews and crane operators. By"
+        " combining modern fleet capabilities with responsive client"
+        " management, we ensure that project timelines are met efficiently"
+        " while safeguarding our clients' high-value assets."
     )
 
   with col2:
-    st.markdown("### 👁️ Aming Pananaw (Vision)")
+    st.markdown("### 👁️ Our Vision")
     st.write(
-        "Ang aming pananaw ay maging pinakapinagkakatiwalaan at nangungunang"
-        " katuwang sa heavy equipment rental at logistics sa buong Luzon,"
-        " Visayas, at Mindanao. Layunin naming pamunuan ang industriya sa"
-        " pamamagitan ng paggamit ng makabagong teknolohiya, modernong fleet"
-        " management, at subok na mga pamantayan sa kaligtasan sa bawat site"
-        " operation. Sa ganitong paraan, nakakatulong kami sa pag-unlad ng"
-        " bansa, renewable energy, at komersyal na konstruksyon habang"
-        " nagtataguyod ng matatag at pangmatagalang ugnayan sa mga namumuno"
-        " sa sektor ng engineering at konstruksyon."
+        "Our vision is to become the Philippines' most trusted and"
+        " benchmark-setting heavy equipment rental and logistics partner across"
+        " Luzon, Visayas, and Mindanao. We aim to lead the industry by"
+        " integrating technical innovation, modern fleet management, and"
+        " field-tested safety protocols into every site operation—empowering"
+        " national progress, renewable energy initiatives, and commercial"
+        " development while cultivating enduring, value-driven partnerships with"
+        " engineering and construction leaders."
     )
 
   st.markdown("---")
-  st.markdown("### 🚚 Kumpletong Talaan ng Aming Equipment at Fleet")
+  st.markdown("### 🚚 Comprehensive Equipment & Fleet List")
   st.write(
-      "Narito ang kumpletong listahan ng aming mga heavy machinery, lifting"
-      " equipment, at specialized transport trailers na handang iparenta at"
-      " ideploy sa inyong mga proyekto:"
+      "Below is our complete line of specialized heavy machinery, lifting"
+      " equipment, and transport trailers available for short-term rentals and"
+      " project deployment:"
   )
 
   eq_col1, eq_col2 = st.columns(2)
@@ -230,19 +457,20 @@ elif page == "Company Profile":
         """)
 
   st.markdown("---")
-  st.markdown("### 📍 Lokasyon at Impormasyon sa Pagkontak")
+  st.markdown("### 📍 Location & Contact Information")
   st.write(
-      "**Opisina:** Queens Row West, Molino 3, Bacoor City, Cavite, Philippines"
+      "**Office Address:** Queens Row West, Molino 3, Bacoor City, Cavite,"
+      " Philippines"
   )
   st.write("**Email:** asycologisticssolutions@gmail.com")
-  st.write("**Sakop na Serbisyo:** Luzon, Visayas, at Mindanao")
+  st.write("**Service Coverage:** Luzon, Visayas, and Mindanao")
 
 # --- PAGE 3: INSTANT RATE CALCULATOR ---
 elif page == "Instant Rate Calculator":
   st.title("Estimated Transport Cost Calculator")
   st.write(
-      "Kumuha ng paunang tantiya ng halaga para sa inyong heavy equipment at"
-      " hauling requirement."
+      "Get a quick preliminary quote estimate for your heavy equipment and"
+      " hauling requirements."
   )
 
   equipment_data = {
