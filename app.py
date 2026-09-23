@@ -128,13 +128,14 @@ elif page == "Company Profile":
     st.title("Company Profile")
     st.subheader("ASYCO LOGISTICS SOLUTIONS")
     st.caption("Heavy Equipment Rentals & Logistics Services")
+    st.markdown("**Founded by Melchor De Guzman Jr. since 2023**")
     st.markdown("---")
 
     st.markdown("### About Our Company")
     st.write(
-        "ASYCO Logistics Solutions provides heavy equipment rental, specialized hauling, "
-        "and drayage logistics across the Philippines. We specialize in safe, efficient, and reliable "
-        "transportation solutions for infrastructure, construction, commercial, and industrial operations."
+        "Founded by Melchor De Guzman Jr. since 2023, ASYCO Logistics Solutions provides heavy equipment rental, "
+        "specialized hauling, and drayage logistics across the Philippines. We specialize in safe, efficient, "
+        "and reliable transportation solutions for infrastructure, construction, commercial, and industrial operations."
     )
 
     col1, col2 = st.columns(2)
@@ -171,6 +172,7 @@ elif page == "Company Profile":
 
     st.markdown("---")
     st.markdown("### 📍 Business Location & Contact")
+    st.write("**Founder / Owner:** Melchor De Guzman Jr.")
     st.write("**Office Address:** Queens Row West, Molino 3, Bacoor City, Cavite, Philippines")
     st.write("**Email:** asycologisticssolutions@gmail.com")
     st.write("**Service Coverage:** Luzon, Visayas, and Mindanao")
