@@ -146,52 +146,56 @@ elif page == "Company Profile":
   st.markdown("**Established in 2023**")
   st.markdown("---")
 
-  st.markdown("### About Our Company")
+  st.markdown("### Tungkol sa Aming Kompanya")
   st.write(
-      "Established in 2023, ASYCO Logistics Solutions has positioned itself"
-      " as a premier and trusted partner for heavy equipment rentals,"
-      " specialized heavy hauling, and container drayage logistics services across"
-      " the Philippines. Grounded in engineering precision, rig safety, and"
-      " reliable site execution, ASYCO delivers seamless end-to-end transport"
-      " solutions tailored to infrastructure development, commercial construction,"
-      " energy projects, and industrial operations."
+      "Itinatag noong 2023, ang ASYCO Logistics Solutions ay isang mabilis na"
+      " umuunlad at pinagkakatiwalaang kompanya sa Pilipinas na nagbibigay ng"
+      " heavy equipment rentals, specialized heavy hauling, at drayage"
+      " logistics services. Sa pamamagitan ng aming expertise sa engineering"
+      " precision, rig safety, at maaasahang site execution, naghahatid ang"
+      " ASYCO ng kumpleto at laging ligtas na transport solutions para sa mga"
+      " proyektong pang-inprastraktura, komersyal na konstruksyon, enerhiya, at"
+      " industriyal."
   )
 
   st.markdown("---")
   col1, col2 = st.columns(2)
   with col1:
-    st.markdown("### 🎯 Our Mission")
+    st.markdown("### 🎯 Aming Layunin (Mission)")
     st.write(
-        "Our mission is to deliver dependable, engineered, and uncompromisingly"
-        " safe heavy haulage and lifting solutions that drive national"
-        " infrastructure development. We are committed to upholding the highest"
-        " standards of operational safety through certified equipment maintenance,"
-        " rigorous lift planning, dynamic capacity checks, and continuous"
-        " professional training for our rigging crews and crane operators. By"
-        " combining modern fleet capabilities with responsive client"
-        " management, we ensure that project timelines are met efficiently"
-        " while safeguarding our clients' high-value assets."
+        "Ang aming layunin ay magbigay ng maasahan, engineered, at walang"
+        " kompromisong ligtas na heavy haulage at lifting solutions na"
+        " nagtataguyod sa pag-unlad ng pambansang inprastraktura. Nakatuon kami"
+        " sa pagpapanatili ng pinakamataas na pamantayan ng operational safety"
+        " sa pamamagitan ng regular na sertipikadong maintenance ng aming mga"
+        " kagamitan, maingat na lift planning, dynamic capacity checks, at"
+        " tuluy-tuloy na propesyonal na pagsasanay ng aming mga rigger at crane"
+        " operators. Sa pagsasama ng makabagong fleet at mabilis na pagtugon sa"
+        " pangangailangan ng kliyente, sinisiguro naming natutupad ang bawat"
+        " proyekto sa takdang oras at napoprotektahan ang mga mahahalagang"
+        " kagamitan ng aming mga kasosyo."
     )
 
   with col2:
-    st.markdown("### 👁️ Our Vision")
+    st.markdown("### 👁️ Aming Pananaw (Vision)")
     st.write(
-        "Our vision is to become the Philippines' most trusted and"
-        " benchmark-setting heavy equipment rental and logistics partner across"
-        " Luzon, Visayas, and Mindanao. We aim to lead the industry by"
-        " integrating technical innovation, modern fleet management, and"
-        " field-tested safety protocols into every site operation—empowering"
-        " national progress, renewable energy initiatives, and commercial"
-        " development while cultivating enduring, value-driven partnerships with"
-        " engineering and construction leaders."
+        "Ang aming pananaw ay maging pinakapinagkakatiwalaan at nangungunang"
+        " katuwang sa heavy equipment rental at logistics sa buong Luzon,"
+        " Visayas, at Mindanao. Layunin naming pamunuan ang industriya sa"
+        " pamamagitan ng paggamit ng makabagong teknolohiya, modernong fleet"
+        " management, at subok na mga pamantayan sa kaligtasan sa bawat site"
+        " operation. Sa ganitong paraan, nakakatulong kami sa pag-unlad ng"
+        " bansa, renewable energy, at komersyal na konstruksyon habang"
+        " nagtataguyod ng matatag at pangmatagalang ugnayan sa mga namumuno"
+        " sa sektor ng engineering at konstruksyon."
     )
 
   st.markdown("---")
-  st.markdown("### 🚚 Comprehensive Equipment & Fleet List")
+  st.markdown("### 🚚 Kumpletong Talaan ng Aming Equipment at Fleet")
   st.write(
-      "Below is our complete line of specialized heavy machinery, lifting"
-      " equipment, and transport trailers available for short-term rentals and"
-      " project deployment:"
+      "Narito ang kumpletong listahan ng aming mga heavy machinery, lifting"
+      " equipment, at specialized transport trailers na handang iparenta at"
+      " ideploy sa inyong mga proyekto:"
   )
 
   eq_col1, eq_col2 = st.columns(2)
@@ -226,20 +230,19 @@ elif page == "Company Profile":
         """)
 
   st.markdown("---")
-  st.markdown("### 📍 Location & Contact Information")
+  st.markdown("### 📍 Lokasyon at Impormasyon sa Pagkontak")
   st.write(
-      "**Office Address:** Queens Row West, Molino 3, Bacoor City, Cavite,"
-      " Philippines"
+      "**Opisina:** Queens Row West, Molino 3, Bacoor City, Cavite, Philippines"
   )
   st.write("**Email:** asycologisticssolutions@gmail.com")
-  st.write("**Service Coverage:** Luzon, Visayas, and Mindanao")
+  st.write("**Sakop na Serbisyo:** Luzon, Visayas, at Mindanao")
 
 # --- PAGE 3: INSTANT RATE CALCULATOR ---
 elif page == "Instant Rate Calculator":
   st.title("Estimated Transport Cost Calculator")
   st.write(
-      "Get a quick preliminary quote estimate for your heavy equipment and"
-      " hauling requirements."
+      "Kumuha ng paunang tantiya ng halaga para sa inyong heavy equipment at"
+      " hauling requirement."
   )
 
   equipment_data = {
